@@ -17,7 +17,7 @@ def api_to_pandas():
     columns = list(objects)
     
     # Keep only the key attributes of interest
-    main_column_names = [col for col in columns[0].keys() if col != 'quotes']
+    main_column_names = [col for col in columns[0].keys() if col not in ('quotes', 'id')]
     sub_column_names = [col for col in columns[0]['quotes']['USD'].keys()]
     column_names = main_column_names + sub_column_names
 

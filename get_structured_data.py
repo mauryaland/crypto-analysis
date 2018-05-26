@@ -6,7 +6,7 @@ import ijson
 import urllib
 from decimal import Decimal
 
-def api_to_pandas():
+def api_to_pandas(csv=False):
     """
     This function is used to call the top 100 cryptos ranking from CMC API and to store it into a pandas dataframe
     """
@@ -35,7 +35,12 @@ def api_to_pandas():
                 info[index] = float(value)            
         data.append(info)
         
-        # Create a pandas dataframe
+    # Create a pandas dataframe
     cmc_df = pd.DataFrame(data, columns=column_names)
     cmc_df.drop('percent_change_1h', axis=1, inplace=True)
+    
+    # Store the dataframe locally as a csv file
+    if csv == True:
+        cmc_df.to_csv('cmc_top100_' + strftime("%Y-%m-%d", gmtime()) + '.csv')
+    
     return cmc_df

@@ -37,4 +37,5 @@ def api_to_pandas():
         
         # Create a pandas dataframe
     cmc_df = pd.DataFrame(data, columns=column_names)
+    cmc_df.drop('percent_change_1h', axis=1, inplace=True)
     return cmc_df

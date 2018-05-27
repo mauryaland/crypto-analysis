@@ -5,6 +5,7 @@ import pandas as pd
 import ijson
 import urllib
 from decimal import Decimal
+from time import gmtime, strftime
 
 def api_to_pandas(csv=False):
     """
@@ -31,7 +32,7 @@ def api_to_pandas(csv=False):
         sub_info = list(columns[rank]['quotes']['USD'].values())      
         info = main_info + sub_info
         for index, value in enumerate(info):
-            if type(value) == decimal.Decimal:
+            if type(value) == Decimal:
                 info[index] = float(value)            
         data.append(info)
         

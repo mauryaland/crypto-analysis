@@ -39,9 +39,14 @@ def api_to_pandas(csv=False):
     # Create a pandas dataframe
     cmc_df = pd.DataFrame(data, columns=column_names)
     cmc_df.drop('percent_change_1h', axis=1, inplace=True)
+	
+	# Add percentage of market cap per crypto
+    cmc_df['perc_market_cap_top100'] = cmc_df.market_cap / cmc_df.market_cap.sum()
     
     # Store the dataframe locally as a csv file
     if csv == True:
         cmc_df.to_csv('cmc_top100_' + strftime("%Y-%m-%d", gmtime()) + '.csv')
+    
+    return cmc_df
     
     return cmc_df

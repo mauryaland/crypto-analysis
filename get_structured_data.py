@@ -13,14 +13,15 @@ def api_to_pandas(csv=False):
     """
     
     # Get the data
-    f = urllib.request.urlopen('https://api.coinmarketcap.com/v2/ticker/?structure=array')
+    f = urllib.request.urlopen('https://api.coinmarketcap.com/v2/ticker/?structure=array&convert=BTC')
     objects = ijson.items(f, 'data.item')
     columns = list(objects)
     
     # Keep only the key attributes of interest
-    main_column_names = [col for col in columns[0].keys() if col not in ('quotes', 'id')]
-    sub_column_names = [col for col in columns[0]['quotes']['USD'].keys()]
-    column_names = main_column_names + sub_column_names
+    main_column_names = [col for col in columns[0].keys() if col not in ('quotes', 'id', 'last_updated')]
+    usd_column_names = ['usd_' + col for col in columns[0]['quotes']['USD'].keys()]
+    btc_column_names = ['btc_' + col for col in columns[0]['quotes']['USD'].keys()]
+    column_names = main_column_names + usd_column_names + btc_column_names
 
     # Take values from those attributes
     data = []
@@ -28,9 +29,10 @@ def api_to_pandas(csv=False):
         main_info = []
         for col in main_column_names:
             main_info.append(columns[rank][col])
-        # Collect informations economic informations in USD     
-        sub_info = list(columns[rank]['quotes']['USD'].values())      
-        info = main_info + sub_info
+        # Collect economic informations relative to USD and BTC   
+        usd_info = list(columns[rank]['quotes']['USD'].values())
+        btc_info = list(columns[rank]['quotes']['BTC'].values())
+        info = main_info + usd_info + btc_info
         for index, value in enumerate(info):
             if type(value) == Decimal:
                 info[index] = float(value)            
@@ -38,15 +40,11 @@ def api_to_pandas(csv=False):
         
     # Create a pandas dataframe
     cmc_df = pd.DataFrame(data, columns=column_names)
-    cmc_df.drop('percent_change_1h', axis=1, inplace=True)
-	
-	# Add percentage of market cap per crypto
-    cmc_df['perc_market_cap_top100'] = cmc_df.market_cap / cmc_df.market_cap.sum()
+    cmc_df.drop(['usd_percent_change_1h','btc_volume_24h', 'btc_market_cap', 'btc_percent_change_1h'], axis=1, inplace=True)
+    cmc_df['perc_market_cap_top100'] = cmc_df.usd_market_cap / cmc_df.usd_market_cap.sum()
     
     # Store the dataframe locally as a csv file
     if csv == True:
         cmc_df.to_csv('cmc_top100_' + strftime("%Y-%m-%d", gmtime()) + '.csv')
-    
-    return cmc_df
     
     return cmc_df

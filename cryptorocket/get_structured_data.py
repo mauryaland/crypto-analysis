@@ -42,7 +42,7 @@ def api_to_pandas(csv=False):
     cmc_df = pd.DataFrame(data, columns=column_names)
     cmc_df.set_index('symbol', inplace=True)
     cmc_df.drop(['usd_percent_change_1h','btc_volume_24h', 'btc_market_cap', 'btc_percent_change_1h'], axis=1, inplace=True)
-    cmc_df['perc_market_cap_top100'] = cmc_df.usd_market_cap / cmc_df.usd_market_cap.sum()
+    cmc_df['perc_market_cap_top100'] = cmc_df.usd_market_cap * 100 / cmc_df.usd_market_cap.sum()
     
     # Store the dataframe locally as a csv file
     if csv == True:

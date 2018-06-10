@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import date
 import re
+import numpy as np
 
 class CMComparison():
     

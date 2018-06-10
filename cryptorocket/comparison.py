@@ -106,7 +106,7 @@ class CMComparison():
                    - btc_percent_change_7d')
         else:
             index = []
-            usd_percent_change = []
+            btc_percent_change = []
             for i in self.df_old.index:
                 if i in self.df_fresh.index:
                     index.append(i)

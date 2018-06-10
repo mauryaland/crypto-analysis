@@ -59,8 +59,8 @@ class CMComparison():
         
         """
         # Compute difference of days between the two datasets
-        year_old, month_old, day_old = map(int, re.findall('\d{4}-\d{2}-\d{2}', self.old_cmc_data)[0].split('-'))
-        year_fresh, month_fresh, day_fresh = map(int, re.findall('\d{4}-\d{2}-\d{2}', self.fresh_cmc_data)[0].split('-'))
+        year_old, month_old, day_old = map(int, re.findall(r'\d{4}-\d{2}-\d{2}', self.old_cmc_data)[0].split('-'))
+        year_fresh, month_fresh, day_fresh = map(int, re.findall(r'\d{4}-\d{2}-\d{2}', self.fresh_cmc_data)[0].split('-'))
         day_old = date(year_old, month_old, day_old)
         day_fresh = date(year_fresh, month_fresh, day_fresh)
         delta = day_fresh - day_old
@@ -93,8 +93,8 @@ class CMComparison():
         
         """
         # Compute difference of days between the two datasets
-        year_old, month_old, day_old = map(int, re.findall('\d{4}-\d{2}-\d{2}', self.old_cmc_data)[0].split('-'))
-        year_fresh, month_fresh, day_fresh = map(int, re.findall('\d{4}-\d{2}-\d{2}', self.fresh_cmc_data)[0].split('-'))
+        year_old, month_old, day_old = map(int, re.findall(r'\d{4}-\d{2}-\d{2}', self.old_cmc_data)[0].split('-'))
+        year_fresh, month_fresh, day_fresh = map(int, re.findall(r'\d{4}-\d{2}-\d{2}', self.fresh_cmc_data)[0].split('-'))
         day_old = date(year_old, month_old, day_old)
         day_fresh = date(year_fresh, month_fresh, day_fresh)
         delta = day_fresh - day_old

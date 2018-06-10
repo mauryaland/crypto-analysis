@@ -11,10 +11,29 @@ class CMComparison():
         self.df_old = pd.read_csv(old_cmc_data, index_col=0)
         self.df_fresh = pd.read_csv(fresh_cmc_data, index_col=0)
         
+    def enhanced_fresh_top100(self):
+        
+        """
+        This function returns the freshest CMC ranking dataframe with 
+        all new information computed in multiple new columns
+        """
+        
+        # Add delta_ranking and pct_change_market_cap columns
+        df = pd.concat([self.df_fresh, self.delta_ranking(), self.pct_change_market_cap()], 
+                       axis=1, sort=False, join='outer')
+        
+        # Add USD and BTC pct change columns if delta days is not 1 or 7
+        if self.usd_percent_change() is not None:
+            df = pd.concat([df, self.usd_percent_change(), self.btc_percent_change()],
+                           axis=1, sort=False, join='outer')
+        
+        return df
+        
+        
     def delta_ranking(self):
         
         """
-        This function returns the freshest CMC ranking dataframe with a new
+        This function returns a dataframe indexed by cryptocurrency symbols with a new
         column which is the delta of the ranking with the old CMC ranking dataset
         """
         
@@ -26,15 +45,13 @@ class CMComparison():
                 index.append(i)
                 delta_rank.append(self.df_old['rank'].loc[i] - self.df_fresh['rank'].loc[i])
         delta_df = pd.DataFrame(data={'delta_rank': delta_rank}, index=index, dtype=np.int64)
-
-        # Merge this dataframe with the freshest CMC top100 data
-        df_delta_rank = self.df_fresh.merge(delta_df, how='left', left_index=True, right_index=True)
-        return df_delta_rank
+        
+        return delta_df
     
     def pct_change_market_cap(self):
    
         """
-        This function returns the freshest CMC ranking dataframe with a new 
+        This function returns dataframe indexed by cryptocurrency symbols with a new 
         column which is the percent change of the market cap of each cryptocurrency
         """
 
@@ -47,14 +64,12 @@ class CMComparison():
                 pct_change_market_cap.append((self.df_fresh['usd_market_cap'].loc[i] - self.df_old['usd_market_cap'].loc[i]) * 100 / self.df_old['usd_market_cap'].loc[i])
         pct_df = pd.DataFrame(data={'pct_change_market_cap': pct_change_market_cap}, index=index)  
         
-        # Merge this dataframe with the freshest CMC top100 data
-        df_pct_change_market_cap = self.df_fresh.merge(pct_df, how='left', left_index=True, right_index=True)
-        return df_pct_change_market_cap 
+        return pct_df
     
     def usd_percent_change(self):
         
         """
-        This function returns a the freshest CMC ranking dataframe with a new 
+        This function returns dataframe indexed by cryptocurrency symbols with a new 
         column which is the percent change of the usd price of each cryptocurrency
         
         """
@@ -80,15 +95,13 @@ class CMComparison():
                     usd_percent_change.append((self.df_fresh['usd_price'].loc[i] - self.df_old['usd_price'].loc[i]) * 100 / self.df_old['usd_price'].loc[i])
             usd_pct_df = pd.DataFrame(data={'usd_percent_change_' + str(delta.days) + 'd': usd_percent_change}, index=index)
             
-            # Merge this dataframe with the freshest CMC top100 data
-            df_usd_percent_change = self.df_fresh.merge(usd_pct_df, how='left', left_index=True, right_index=True)
-            return df_usd_percent_change
+            return usd_pct_df
         
         
     def btc_percent_change(self):
         
         """
-        This function returns a the freshest CMC ranking dataframe with a new 
+        This function returns a dataframe indexed by cryptocurrency symbols with a new 
         column which is the percent change of the btc price of each cryptocurrency
         
         """
@@ -105,6 +118,7 @@ class CMComparison():
             print('Information already in the columns:\n \
                    - btc_percent_change_24h\n \
                    - btc_percent_change_7d')
+            
         else:
             index = []
             btc_percent_change = []
@@ -114,9 +128,7 @@ class CMComparison():
                     btc_percent_change.append((self.df_fresh['btc_price'].loc[i] - self.df_old['btc_price'].loc[i]) * 100 / self.df_old['btc_price'].loc[i])
             btc_pct_df = pd.DataFrame(data={'btc_percent_change_' + str(delta.days) + 'd': btc_percent_change}, index=index)
             
-            # Merge this dataframe with the freshest CMC top100 data
-            df_btc_percent_change = self.df_fresh.merge(btc_pct_df, how='left', left_index=True, right_index=True)
-            return df_btc_percent_change
+            return btc_pct_df
     
     
     def newcomers_top100(self):

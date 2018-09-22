@@ -47,5 +47,6 @@ def api_to_pandas(csv=False):
     # Store the dataframe locally as a csv file
     if csv == True:
         cmc_df.to_csv('cmc_top100_' + strftime("%Y-%m-%d", gmtime()) + '.csv')
+        print("File successfully saved under the name cmc_top100_" + strftime("%Y-%m-%d", gmtime()) + ".csv")
     
     return cmc_df

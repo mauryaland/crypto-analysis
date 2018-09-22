@@ -1,5 +1,5 @@
 # crypto-analysis
-Tools for getting [CoinMarketCap](https://coinmarketcap.com/) top 100 cryptocurrencies by market capitalization and get some insights about temporal evolution
+Tools for getting [CoinMarketCap](https://coinmarketcap.com/) top 100 cryptocurrencies by market capitalization and some insights about temporal evolution
 
 ## Getting Started
 

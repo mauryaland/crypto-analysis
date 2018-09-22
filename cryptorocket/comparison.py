@@ -40,12 +40,14 @@ class CMComparison():
         # Compute the delta_rank dataframe
         index = []
         delta_rank = []
-        for i in self.df_old.index:
-            if i in self.df_fresh.index:
-                index.append(i)
-                delta_rank.append(round(self.df_old['rank'].loc[i] - self.df_fresh['rank'].loc[i]))
-        delta_df = pd.DataFrame(data={'delta_rank': delta_rank}, index=index, dtype=np.int64)
-        
+        for i in self.df_fresh.index:
+            index.append(i)
+            if i in self.df_old.index:
+                delta_rank.append(self.df_old['rank'].loc[i] - self.df_fresh['rank'].loc[i])
+            else:
+                delta_rank.append(101 - self.df_fresh['rank'].loc[i])
+            delta_df = pd.DataFrame(data={'delta_rank': delta_rank}, index=index, dtype=np.int64)
+            
         return delta_df
     
     def pct_change_market_cap(self):

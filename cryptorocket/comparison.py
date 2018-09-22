@@ -43,7 +43,7 @@ class CMComparison():
         for i in self.df_old.index:
             if i in self.df_fresh.index:
                 index.append(i)
-                delta_rank.append(self.df_old['rank'].loc[i] - self.df_fresh['rank'].loc[i])
+                delta_rank.append(int(self.df_old['rank'].loc[i] - self.df_fresh['rank'].loc[i]))
         delta_df = pd.DataFrame(data={'delta_rank': delta_rank}, index=index, dtype=np.int64)
         
         return delta_df
